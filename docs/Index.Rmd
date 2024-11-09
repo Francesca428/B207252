@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ## Title
@@ -199,5 +199,3 @@ all_antibiotics_table
 #Note: I have kept in the NAs as it shows prescriptions that have moved in and out of the top 10 antibiotic prescriptions in the years I am looking at.
 ```
 
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
