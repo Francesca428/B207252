@@ -9,23 +9,238 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Title
+How did antibiotic prescription trends vary pre-lockdown, across the 3 lockdowns, and post-lockdown in different regions?
+(Should I focus on one lockdown)?
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+##Plan
+Plan:
+Question = 
+Did the Covid19 pandemic and the resulting lockdown affect the prescriptions of common antibiotics
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+How did the prescription of ... change based on covid 19 lockdown
 
-```{r cars}
-summary(cars)
-#Change!
+March - July 2020
+
+November - December 2020
+
+January - March 2021 (fully eased July 2021)
+
+Before data = Jan 2019
+Data: Mid lockdown 1: 3 - 7 = 5 = May
+Mid lockdown 2: 11-12 = Nov/Dec
+Mid lockdown 3: 1 - 3 = 2 = Feb
+After data = Now
+
+First I will look load the appropriate libraries, load the data, clean the names and filter out any NA prescription names. I start with May 2020 as this was in the middle of the first lockdown.
+```{r}
+library(tidyverse)
+library(janitor) # cleaning data
+library(gt) # tables
+library(here) # directory structure (will be useful later)
+library(ggplot2)
+
+may2020 <- read_csv(here("data","pitc202005.csv"))
+
+may2020 %>% 
+  clean_names()
+
+may2020 <- may2020 %>% 
+  filter(!is.na(BNFItemDescription))
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+Next I filter for antibiotics. I did this by only looking at prescriptions with the BNFItemCode starting with 0501.
+```{r}
+may2020antibiotics <- may2020 %>% 
+  filter(str_detect(BNFItemCode, "^0501"))
 ```
+
+Next I arranged them in descending order and looked at the top 10 most prescribed antibiotics. Then made a gt() table.
+```{r}
+#Is the variable "PaidQuantity" the correct variable to use to ascertain prescription rates?
+
+may2020antibiotics <- may2020antibiotics %>%
+  mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+")) %>%  # Extract first word
+  group_by(antibiotic_name) %>%  # Group by first word
+  summarise(quantity_sum = sum(PaidQuantity)) %>% 
+  arrange(-quantity_sum)
+may2020antibiotics
+
+may2020antibiotics_top10 <- may2020antibiotics %>% 
+  slice(1:10)
+
+```
+
+gt() table.
+```{r}
+may2020antibiotics_table <- may2020antibiotics_top10 %>%
+  summarize(quantity_sum = sum(quantity_sum)) %>% 
+  mutate(antibiotic_name = "Total") %>% 
+  bind_rows(may2020antibiotics_top10, .)
+  
+  #gt() %>% 
+  #cols_label(antibiotic_name = "Antibiotic",
+             #quantity_sum = "Prescriptions") %>% 
+   #cols_align(align = "center",
+              #columns = antibiotic_name) %>% 
+   #cols_align(align = "center",
+              #columns = quantity_sum) %>% 
+  #tab_style(
+    #style = cell_text(weight = "bold"),
+    #locations = cells_column_labels(columns = everything())
+  #)
+may2020antibiotics_table
+```
+
+## Merge tables
+Im going to create a table of all of the data
+
+1st, download the data. For the purpose of the formative assessment, I will only focus on the first lockdown and pre/post covid lockdowns
+```{r}
+may2024 <- read_csv(here("data","pitc202405.csv"))
+
+may2024 %>% 
+  clean_names()
+
+may2024 <- may2024 %>% 
+  filter(!is.na(BNFItemDescription))
+
+may2024antibiotics <- may2024 %>% 
+  filter(str_detect(BNFItemCode, "^0501"))
+
+may2024antibiotics <- may2024antibiotics %>%
+  mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))  # Extract first word
+```
+
+```{r}
+may2024antibiotics <- may2024antibiotics %>%
+  group_by(antibiotic_name) %>%  # Group by first word
+  summarise(quantity_sum = sum(PaidQuantity)) %>% 
+  arrange(-quantity_sum)
+may2024antibiotics
+
+may2024antibiotics_top10 <- may2024antibiotics %>% 
+  slice(1:10)
+```
+
+
+```{r}
+may2024antibiotics_table <- may2024antibiotics_top10 %>%
+  summarize(quantity_sum = sum(quantity_sum)) %>% 
+  mutate(antibiotic_name = "Total") %>% 
+  bind_rows(may2024antibiotics_top10, .)
+may2024antibiotics_table
+```
+
+Next, I do the same with the 2019 data
+```{r}
+may2019 <- read_csv(here("data","pitc201905.csv"))
+
+may2019 %>% 
+  clean_names()
+
+may2019 <- may2019 %>% 
+  filter(!is.na(BNFItemDescription))
+
+may2019antibiotics <- may2019 %>% 
+  filter(str_detect(BNFItemCode, "^0501"))
+
+may2019antibiotics <- may2019antibiotics %>%
+  mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))  # Extract first word
+```
+
+```{r}
+may2019antibiotics <- may2019antibiotics %>%
+  group_by(antibiotic_name) %>%  # Group by first word
+  summarise(quantity_sum = sum(PaidQuantity)) %>% 
+  arrange(-quantity_sum)
+may2019antibiotics
+
+may2019antibiotics_top10 <- may2019antibiotics %>% 
+  slice(1:10)
+```
+
+```{r}
+may2019antibiotics_table <- may2019antibiotics_top10 %>%
+  summarize(quantity_sum = sum(quantity_sum)) %>% 
+  mutate(antibiotic_name = "Total") %>% 
+  bind_rows(may2019antibiotics_top10, .)
+may2019antibiotics_table
+```
+
+Next, I merge all the data into one table. With NAs if there are antibiotic prescriptions in the top 10 of some years, but not in others
+```{r}
+antibiotics1920 <- may2019antibiotics_top10 %>% 
+  full_join(may2020antibiotics_top10, join_by(antibiotic_name))
+
+antibiotics192024 <- antibiotics1920 %>% 
+  full_join(may2024antibiotics_top10, join_by(antibiotic_name))
+
+antibiotics192024 <- antibiotics192024 %>% 
+  rename(
+    "Antibiotic_Name" = antibiotic_name,
+   "May_2019" = quantity_sum.x,
+   "May_2020" = quantity_sum.y,
+   "May_2024" = quantity_sum
+  )
+```
+
+Stacked bar graph to visually compare prescriptions
+```{r}
+pivoted_antibiotics <- antibiotics192024 %>% 
+  pivot_longer(
+    cols = c("May_2019", "May_2020", "May_2024"), 
+    names_to = "Year", 
+    values_to = "Prescription_Number")
+pivoted_antibiotics
+
+
+expanded_RdYlGn_pallete <- c("#D73027",  "#D55E00", "#FC8D59", "#FEE08B", "#D9EF8B",  "#B7E4A7",  "#A6D96A", "#91BF5D", "#1A9850", "#31A354", "#66BD63", "#006837" ,  "#1D5B28")
+
+
+antibiotics_graph <- pivoted_antibiotics %>% 
+  ggplot(aes(x = Prescription_Number, y = Year, fill = Antibiotic_Name)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Prescriptions Sold for Each Antibiotic by Year", 
+       x = "Antibiotic Name", 
+       y = "Prescriptions Sold") +
+  scale_fill_manual(values = expanded_RdYlGn_pallete) +
+  theme_minimal()
+antibiotics_graph
+```
+
+gt() table of joined data
+```{r}
+all_antibiotics_table <- antibiotics192024 %>%
+  summarise(across(starts_with("May"), sum, na.rm = TRUE)) %>%  
+  mutate(Antibiotic_Name = "Total") %>%
+  bind_rows(antibiotics192024, .)
+
+all_antibiotics_table <- all_antibiotics_table %>%
+  gt() %>% 
+  cols_label(Antibiotic_Name = "Antibiotic",
+             May_2019 = "May 2019",
+             May_2020 = "May 2020",
+             May_2024 = "May 2024") %>% 
+   cols_align(align = "center",
+              columns = everything()) %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels(columns = everything())
+  ) %>% 
+  tab_header(
+    title = "Affect of the Covid19 pandemic on the prescription of common antibiotics",
+    subtitle = "Looking at the change of prescriptions for the top 10 most common antibiotics from before, during and after the longest Covid19 lockdown") %>% 
+    tab_spanner(
+      label = "Number of Prescriptions",
+      columns = c(May_2019, May_2020, May_2024))
+all_antibiotics_table
+
+#Note: I have kept in the NAs as it shows prescriptions that have moved in and out of the top 10 antibiotic prescriptions in the years I am looking at.
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
