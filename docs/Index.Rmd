@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warnings=FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warnings = FALSE)
 ```
 
 ## Title
@@ -33,7 +33,7 @@ Mid lockdown 3: 1 - 3 = 2 = Feb
 After data = Now
 
 First I will look load the appropriate libraries, load the data, clean the names and filter out any NA prescription names. I start with May 2020 as this was in the middle of the first lockdown.
-```{r, echo = TRUE, message=FALSE, warnings=FALSE, results = "hide"}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE}
 library(tidyverse)
 library(janitor) # cleaning data
 library(gt) # tables
@@ -56,7 +56,7 @@ may2020antibiotics <- may2020 %>%
 ```
 
 Next I arranged them in descending order and looked at the top 10 most prescribed antibiotics. Then made a gt() table.
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE}
 #Is the variable "PaidQuantity" the correct variable to use to ascertain prescription rates?
 
 may2020antibiotics <- may2020antibiotics %>%
@@ -65,7 +65,6 @@ may2020antibiotics <- may2020antibiotics %>%
   group_by(antibiotic_name) %>%  # Group by first word
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
   arrange(-quantity_sum)
-may2020antibiotics
 
 may2020antibiotics_top10 <- may2020antibiotics %>% 
   slice(1:10)
@@ -76,7 +75,7 @@ may2020antibiotics_top10 <- may2020antibiotics %>%
 Im going to create a table of all of the data
 
 1st, download the data. For the purpose of the formative assessment, I will only focus on the first lockdown and pre/post covid lockdowns
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE, results = "hide"}
 may2024 <- read_csv(here("data","pitc202405.csv"))
 
 may2024 %>% 
@@ -98,14 +97,13 @@ may2024antibiotics <- may2024antibiotics %>%
   group_by(antibiotic_name) %>%  # Group by first word
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
   arrange(-quantity_sum)
-may2024antibiotics
 
 may2024antibiotics_top10 <- may2024antibiotics %>% 
   slice(1:10)
 ```
 
 Next, I do the same with the 2019 data
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE, results = "hide"}
 may2019 <- read_csv(here("data","pitc201905.csv"))
 
 may2019 %>% 
@@ -122,12 +120,11 @@ may2019antibiotics <- may2019antibiotics %>%
   mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))  # Extract first word
 ```
 
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE}
 may2019antibiotics <- may2019antibiotics %>%
   group_by(antibiotic_name) %>%  # Group by first word
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
   arrange(-quantity_sum)
-may2019antibiotics
 
 may2019antibiotics_top10 <- may2019antibiotics %>% 
   slice(1:10)
@@ -151,14 +148,12 @@ antibiotics192024 <- antibiotics192024 %>%
 ```
 
 Stacked bar graph to visually compare prescriptions
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE}
 pivoted_antibiotics <- antibiotics192024 %>% 
   pivot_longer(
     cols = c("May_2019", "May_2020", "May_2024"), 
     names_to = "Year", 
     values_to = "Prescription_Number")
-pivoted_antibiotics
-
 
 expanded_RdYlGn_pallete <- c("#D73027",  "#D55E00", "#FC8D59", "#FEE08B", "#D9EF8B",  "#B7E4A7",  "#A6D96A", "#91BF5D", "#1A9850", "#31A354", "#66BD63", "#006837" ,  "#1D5B28")
 
@@ -175,7 +170,7 @@ antibiotics_graph
 ```
 
 gt() table of joined data
-```{r, echo = TRUE, message=FALSE, warnings=FALSE}
+```{r, echo = TRUE, message = FALSE, warnings = FALSE}
 all_antibiotics_table <- antibiotics192024 %>%
   summarise(across(starts_with("May"), sum, na.rm = TRUE)) %>%  
   mutate(Antibiotic_Name = "Total") %>%
