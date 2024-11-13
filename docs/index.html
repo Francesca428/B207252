@@ -387,12 +387,7 @@ may2020antibiotics &lt;- may2020antibiotics %&gt;%
 
 may2020antibiotics_top10 &lt;- may2020antibiotics %&gt;% 
   slice(1:10)</code></pre>
-</div>
-<div id="merge-tables" class="section level2">
-<h2>Merge tables</h2>
-<p>Im going to create a table of all of the data</p>
-<p>1st, download the data. For the purpose of the formative assessment,
-I will only focus on the first lockdown and pre/post covid lockdowns</p>
+<p>Prepping pre- and post-lockdown data for merging</p>
 <pre class="r"><code>may2024 &lt;- read_csv(here(&quot;data&quot;,&quot;pitc202405.csv&quot;))
 
 may2024 %&gt;% 
@@ -411,7 +406,6 @@ may2024antibiotics &lt;- may2024antibiotics %&gt;%
 
 may2024antibiotics_top10 &lt;- may2024antibiotics %&gt;% 
   slice(1:10)</code></pre>
-<p>Next, I do the same with the 2019 data</p>
 <pre class="r"><code>may2019 &lt;- read_csv(here(&quot;data&quot;,&quot;pitc201905.csv&quot;))
 
 may2019 %&gt;% 
@@ -430,9 +424,7 @@ may2019antibiotics &lt;- may2019antibiotics %&gt;%
 
 may2019antibiotics_top10 &lt;- may2019antibiotics %&gt;% 
   slice(1:10)</code></pre>
-<p>Next, I merge all the data into one table. With NAs if there are
-antibiotic prescriptions in the top 10 of some years, but not in
-others</p>
+<p>Merging the data</p>
 <pre class="r"><code>antibiotics1920 &lt;- may2019antibiotics_top10 %&gt;% 
   full_join(may2020antibiotics_top10, join_by(antibiotic_name))
 
