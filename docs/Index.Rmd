@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-## How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions?
+## How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions of Scotland?
 (Would it be better to focus on the main lockdown (May 2020) or also compare between lockdowns?)
 
 First I will load the appropriate libraries. Then, load, clean and filter the data.
