@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ## How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions?
-(Would it be better to focus on one lockdown or also compare between lockdowns)?
+(Would it be better to focus on the main lockdown (May 2020) or also compare between lockdowns?)
 
 First I will load the appropriate libraries. Then, load, clean and filter the data.
 ```{r, include=FALSE}
@@ -124,6 +124,7 @@ antibiotics_graph <- pivoted_antibiotics %>%
   theme_minimal()
 antibiotics_graph
 ```
+
 This data visulaisation shows that the overall number of prescirptions sold decreased during lockdown and was slightly lower before lockdown than after. It also shows that the top 10 most prescribed antibiotics were not the same in every year.
 
 To expand on this, I would create a gt() table to show the number of prescritptions and calculate a total for each year. I could use K nearest to predict what the May 2020 data should have been (if there was no covid outbreak), based on previous years' prescriptions. I would then create a faceted line plot (or 1 plot with 2 line graphs on it, depedning on how the graphs look) comparing the prediction of what May 2020 prescriptions would look like if covid didnt happen vs. what it actually was. I could also create a faceted geospatial map showing how the total number of antitibiotic prescriptions were different over Scotland in these 3 years.
