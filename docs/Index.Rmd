@@ -49,11 +49,7 @@ may2020antibiotics <- may2020antibiotics %>%
 may2020antibiotics_top10 <- may2020antibiotics %>% 
   slice(1:10)
 ```
-
-## Merge tables
-Im going to create a table of all of the data
-
-1st, download the data. For the purpose of the formative assessment, I will only focus on the first lockdown and pre/post covid lockdowns
+Prepping pre- and post-lockdown data for merging
 ```{r, results = "hide"}
 may2024 <- read_csv(here("data","pitc202405.csv"))
 
@@ -74,7 +70,7 @@ may2024antibiotics <- may2024antibiotics %>%
 may2024antibiotics_top10 <- may2024antibiotics %>% 
   slice(1:10)
 ```
-Next, I do the same with the 2019 data
+
 ```{r, results = "hide"}
 may2019 <- read_csv(here("data","pitc201905.csv"))
 
@@ -95,7 +91,7 @@ may2019antibiotics <- may2019antibiotics %>%
 may2019antibiotics_top10 <- may2019antibiotics %>% 
   slice(1:10)
 ```
-Next, I merge all the data into one table. With NAs if there are antibiotic prescriptions in the top 10 of some years, but not in others
+Merging the data
 ```{r}
 antibiotics1920 <- may2019antibiotics_top10 %>% 
   full_join(may2020antibiotics_top10, join_by(antibiotic_name))
@@ -111,7 +107,6 @@ antibiotics192024 <- antibiotics192024 %>%
    "May 2024" = quantity_sum
   )
 ```
-
 Stacked bar graph to visually compare prescriptions
 ```{r}
 pivoted_antibiotics <- antibiotics192024 %>% 
@@ -134,4 +129,3 @@ antibiotics_graph <- pivoted_antibiotics %>%
   theme_minimal()
 antibiotics_graph
 ```
-
