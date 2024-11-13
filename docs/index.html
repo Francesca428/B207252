@@ -387,43 +387,9 @@ may2020antibiotics &lt;- may2020antibiotics %&gt;%
 
 may2020antibiotics_top10 &lt;- may2020antibiotics %&gt;% 
   slice(1:10)</code></pre>
-<p>Prepping pre- and post-lockdown data for merging</p>
-<pre class="r"><code>may2024 &lt;- read_csv(here(&quot;data&quot;,&quot;pitc202405.csv&quot;))
-
-may2024 %&gt;% 
-  clean_names()
-
-may2024antibiotics &lt;- may2024 %&gt;% 
-  filter(!is.na(BNFItemDescription)) %&gt;% 
-  filter(str_detect(BNFItemCode, &quot;^0501&quot;)) %&gt;% 
-  mutate(BNFItemDescription = str_replace(BNFItemDescription, &quot;_&quot;, &quot; &quot;)) %&gt;% 
-  mutate(antibiotic_name = str_extract(BNFItemDescription, &quot;^[^ ]+&quot;))
-
-may2024antibiotics &lt;- may2024antibiotics %&gt;%
-  group_by(antibiotic_name) %&gt;%
-  summarise(quantity_sum = sum(PaidQuantity)) %&gt;% 
-  arrange(-quantity_sum)
-
-may2024antibiotics_top10 &lt;- may2024antibiotics %&gt;% 
-  slice(1:10)</code></pre>
-<pre class="r"><code>may2019 &lt;- read_csv(here(&quot;data&quot;,&quot;pitc201905.csv&quot;))
-
-may2019 %&gt;% 
-  clean_names()
-
-may2019antibiotics &lt;- may2019 %&gt;% 
-  filter(!is.na(BNFItemDescription)) %&gt;% 
-  filter(str_detect(BNFItemCode, &quot;^0501&quot;)) %&gt;% 
-  mutate(BNFItemDescription = str_replace(BNFItemDescription, &quot;_&quot;, &quot; &quot;)) %&gt;% 
-  mutate(antibiotic_name = str_extract(BNFItemDescription, &quot;^[^ ]+&quot;))
-
-may2019antibiotics &lt;- may2019antibiotics %&gt;%
-  group_by(antibiotic_name) %&gt;%  # Group by first word
-  summarise(quantity_sum = sum(PaidQuantity)) %&gt;% 
-  arrange(-quantity_sum)
-
-may2019antibiotics_top10 &lt;- may2019antibiotics %&gt;% 
-  slice(1:10)</code></pre>
+<p>I prepared the pre- (2019) and post (2020)-lockdown data for merging,
+as I did before (I hid this to save space for the formative work. I will
+include it in the summative assessment.)</p>
 <p>Merging the data</p>
 <pre class="r"><code>antibiotics1920 &lt;- may2019antibiotics_top10 %&gt;% 
   full_join(may2020antibiotics_top10, join_by(antibiotic_name))

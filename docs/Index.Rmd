@@ -49,8 +49,8 @@ may2020antibiotics <- may2020antibiotics %>%
 may2020antibiotics_top10 <- may2020antibiotics %>% 
   slice(1:10)
 ```
-Prepping pre- and post-lockdown data for merging
-```{r, results = "hide"}
+I prepared the pre- (2019) and post (2020)-lockdown data for merging, as I did before (I hid this to save space for the formative work. I will include it in the summative assessment.)
+```{r, results = "hide", include=FALSE}
 may2024 <- read_csv(here("data","pitc202405.csv"))
 
 may2024 %>% 
@@ -71,7 +71,7 @@ may2024antibiotics_top10 <- may2024antibiotics %>%
   slice(1:10)
 ```
 
-```{r, results = "hide"}
+```{r, results = "hide", include=FALSE}
 may2019 <- read_csv(here("data","pitc201905.csv"))
 
 may2019 %>% 
