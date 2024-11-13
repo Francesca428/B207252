@@ -10,34 +10,15 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ## Title
-How did antibiotic prescription trends vary pre-lockdown, across the 3 lockdowns, and post-lockdown in different regions?
-(Should I focus on one lockdown)?
-
-##Plan
-Plan:
-Question = 
-Did the Covid19 pandemic and the resulting lockdown affect the prescriptions of common antibiotics
-
-How did the prescription of ... change based on covid 19 lockdown
-
-March - July 2020
-
-November - December 2020
-
-January - March 2021 (fully eased July 2021)
-
-Before data = Jan 2019
-Data: Mid lockdown 1: 3 - 7 = 5 = May
-Mid lockdown 2: 11-12 = Nov/Dec
-Mid lockdown 3: 1 - 3 = 2 = Feb
-After data = Now
+How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions?
+(Should I focus on one lockdown or also include information from lockdown 2 and 3)?
 
 First I will look load the appropriate libraries, load the data, clean the names and filter out any NA prescription names. I start with May 2020 as this was in the middle of the first lockdown.
 ```{r, results = "hide"}
 library(tidyverse)
-library(janitor) # cleaning data
-library(gt) # tables
-library(here) # directory structure (will be useful later)
+library(janitor)
+library(gt)
+library(here)
 library(ggplot2)
 
 may2020 <- read_csv(here("data","pitc202005.csv"))
@@ -162,40 +143,10 @@ antibiotics_graph <- pivoted_antibiotics %>%
   ggplot(aes(x = Prescription_Number, y = Year, fill = Antibiotic_Name)) +
   geom_bar(stat = "identity") +
   labs(title = "Prescriptions Sold for Each Antibiotic by Year", 
-       x = "Antibiotic Name", 
-       y = "Prescriptions Sold") +
+       x = "Prescriptions Sold", 
+       y = "Antibiotic Name") +
   scale_fill_manual(values = expanded_RdYlGn_pallete) +
   theme_minimal()
 antibiotics_graph
-```
-
-gt() table of joined data
-```{r, echo = TRUE, message = FALSE, warnings = FALSE}
-all_antibiotics_table <- antibiotics192024 %>%
-  summarise(across(starts_with("May"), sum, na.rm = TRUE)) %>%  
-  mutate(Antibiotic_Name = "Total") %>%
-  bind_rows(antibiotics192024, .)
-
-all_antibiotics_table <- all_antibiotics_table %>%
-  gt() %>% 
-  cols_label(Antibiotic_Name = "Antibiotic",
-             May_2019 = "May 2019",
-             May_2020 = "May 2020",
-             May_2024 = "May 2024") %>% 
-   cols_align(align = "center",
-              columns = everything()) %>% 
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = cells_column_labels(columns = everything())
-  ) %>% 
-  tab_header(
-    title = "Affect of the Covid19 pandemic on the prescription of common antibiotics",
-    subtitle = "Looking at the change of prescriptions for the top 10 most common antibiotics from before, during and after the longest Covid19 lockdown") %>% 
-    tab_spanner(
-      label = "Number of Prescriptions",
-      columns = c(May_2019, May_2020, May_2024))
-all_antibiotics_table
-
-#Note: I have kept in the NAs as it shows prescriptions that have moved in and out of the top 10 antibiotic prescriptions in the years I am looking at.
 ```
 
