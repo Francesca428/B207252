@@ -9,18 +9,19 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-## Title
-How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions?
-(Should I focus on one lockdown or also include information from lockdown 2 and 3)?
+## How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions?
+(Should I focus on one lockdown or also compare between lockdowns)?
 
-First I will look load the appropriate libraries, load the data, clean the names and filter out any NA prescription names. I start with May 2020 as this was in the middle of the first lockdown.
-```{r, results = "hide"}
+First I will look load the appropriate libraries. Then, load, clean and filter the data.
+```{r, include=FALSE}
 library(tidyverse)
 library(janitor)
 library(gt)
 library(here)
 library(ggplot2)
+```
 
+```{r, results = "hide"}
 may2020 <- read_csv(here("data","pitc202005.csv"))
 
 may2020 %>% 
@@ -30,26 +31,23 @@ may2020 <- may2020 %>%
   filter(!is.na(BNFItemDescription))
 ```
 
-Next I filter for antibiotics. I did this by only looking at prescriptions with the BNFItemCode starting with 0501.
+Next, I filtered for antibiotics by only looking at prescriptions with the BNFItemCode starting with 0501.
 ```{r}
 may2020antibiotics <- may2020 %>% 
   filter(str_detect(BNFItemCode, "^0501"))
 ```
-
-Next I arranged them in descending order and looked at the top 10 most prescribed antibiotics. Then made a gt() table.
+Next I arranged them in descending order and looked at the top 10 most prescribed antibiotics.
 ```{r}
 #Is the variable "PaidQuantity" the correct variable to use to ascertain prescription rates?
-
 may2020antibiotics <- may2020antibiotics %>%
   mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
-  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+")) %>%  # Extract first word
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+")) %>%
   group_by(antibiotic_name) %>%  # Group by first word
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
   arrange(-quantity_sum)
 
 may2020antibiotics_top10 <- may2020antibiotics %>% 
   slice(1:10)
-
 ```
 
 ## Merge tables
@@ -62,27 +60,20 @@ may2024 <- read_csv(here("data","pitc202405.csv"))
 may2024 %>% 
   clean_names()
 
-may2024 <- may2024 %>% 
-  filter(!is.na(BNFItemDescription))
-
 may2024antibiotics <- may2024 %>% 
-  filter(str_detect(BNFItemCode, "^0501"))
-
-may2024antibiotics <- may2024antibiotics %>%
+  filter(!is.na(BNFItemDescription)) %>% 
+  filter(str_detect(BNFItemCode, "^0501")) %>% 
   mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
-  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))  # Extract first word
-```
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))
 
-```{r}
 may2024antibiotics <- may2024antibiotics %>%
-  group_by(antibiotic_name) %>%  # Group by first word
+  group_by(antibiotic_name) %>%
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
   arrange(-quantity_sum)
 
 may2024antibiotics_top10 <- may2024antibiotics %>% 
   slice(1:10)
 ```
-
 Next, I do the same with the 2019 data
 ```{r, results = "hide"}
 may2019 <- read_csv(here("data","pitc201905.csv"))
@@ -90,18 +81,12 @@ may2019 <- read_csv(here("data","pitc201905.csv"))
 may2019 %>% 
   clean_names()
 
-may2019 <- may2019 %>% 
-  filter(!is.na(BNFItemDescription))
-
 may2019antibiotics <- may2019 %>% 
-  filter(str_detect(BNFItemCode, "^0501"))
-
-may2019antibiotics <- may2019antibiotics %>%
+  filter(!is.na(BNFItemDescription)) %>% 
+  filter(str_detect(BNFItemCode, "^0501")) %>% 
   mutate(BNFItemDescription = str_replace(BNFItemDescription, "_", " ")) %>% 
-  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))  # Extract first word
-```
+  mutate(antibiotic_name = str_extract(BNFItemDescription, "^[^ ]+"))
 
-```{r}
 may2019antibiotics <- may2019antibiotics %>%
   group_by(antibiotic_name) %>%  # Group by first word
   summarise(quantity_sum = sum(PaidQuantity)) %>% 
@@ -110,7 +95,6 @@ may2019antibiotics <- may2019antibiotics %>%
 may2019antibiotics_top10 <- may2019antibiotics %>% 
   slice(1:10)
 ```
-
 Next, I merge all the data into one table. With NAs if there are antibiotic prescriptions in the top 10 of some years, but not in others
 ```{r}
 antibiotics1920 <- may2019antibiotics_top10 %>% 
@@ -122,9 +106,9 @@ antibiotics192024 <- antibiotics1920 %>%
 antibiotics192024 <- antibiotics192024 %>% 
   rename(
     "Antibiotic_Name" = antibiotic_name,
-   "May_2019" = quantity_sum.x,
-   "May_2020" = quantity_sum.y,
-   "May_2024" = quantity_sum
+   "May 2019" = quantity_sum.x,
+   "May 2020" = quantity_sum.y,
+   "May 2024" = quantity_sum
   )
 ```
 
@@ -132,7 +116,7 @@ Stacked bar graph to visually compare prescriptions
 ```{r}
 pivoted_antibiotics <- antibiotics192024 %>% 
   pivot_longer(
-    cols = c("May_2019", "May_2020", "May_2024"), 
+    cols = c("May 2019", "May 2020", "May 2024"), 
     names_to = "Year", 
     values_to = "Prescription_Number")
 
@@ -144,7 +128,8 @@ antibiotics_graph <- pivoted_antibiotics %>%
   geom_bar(stat = "identity") +
   labs(title = "Prescriptions Sold for Each Antibiotic by Year", 
        x = "Prescriptions Sold", 
-       y = "Antibiotic Name") +
+       y = "Year",
+       fill = "Antibiotic Name") +
   scale_fill_manual(values = expanded_RdYlGn_pallete) +
   theme_minimal()
 antibiotics_graph
