@@ -44,19 +44,17 @@ process_antibiotics <- function(data) {
 may2019_processed <- process_antibiotics(may2019)
 may2020_processed <- process_antibiotics(may2020)
 may2024_processed <- process_antibiotics(may2024)
-
-#Here I rename Fluclox to Flucloxacillin to make it easier to join
+```
+I then prepared the data for joining by renaming Fluclox to Flucloxacillin. I then joined the data, and tidied it
+```{r}
 may2020_processed <- may2020_processed %>% 
   mutate(antibiotic_name = ifelse(antibiotic_name == "FLUCLOX", "FLUCLOXACILLIN", antibiotic_name))
 
 may2019_processed <- may2019_processed %>% 
   mutate(antibiotic_name = ifelse(antibiotic_name == "FLUCLOX", "FLUCLOXACILLIN", antibiotic_name))
 
-# Combine the results
 antibiotics1920 <- full_join(may2019_processed, may2020_processed, by = "antibiotic_name")
 antibiotics192024 <- full_join(antibiotics1920, may2024_processed, by = "antibiotic_name")
-
-#https://www.dataquest.io/blog/write-functions-in-r/
 
 antibiotics192024 <- antibiotics192024 %>% 
   rename(
@@ -68,8 +66,10 @@ antibiotics192024 <- antibiotics192024 %>%
 antibiotics192024 <- antibiotics192024 %>% 
   mutate(antibiotic_name = str_to_sentence(antibiotic_name)) #I changed all the antibiotic names to only have the first letter capitalised. I learnt this from the R help page
 ```
+
+
 I created a stacked bar graph to visually compare prescriptions
-```{r, echo=FALSE}
+```{r}
 pivoted_antibiotics <- antibiotics192024 %>% 
   pivot_longer(
     cols = c("May 2019", "May 2020", "May 2024"), 
@@ -90,7 +90,9 @@ antibiotics_graph
 
 This data visulaisation shows that the overall number of prescirptions sold decreased during lockdown and was slightly lower before lockdown than after. It also shows that the top 10 most prescribed antibiotics were not the same in every year.
 
-To expand on this, I would create a gt() table to show the number of prescriptions and calculate a total for each year. I could use K nearest to predict what the May 2020 data should have been (if there was no covid outbreak), based on previous years' prescriptions. I would then create a faceted line plot (or 1 plot with 2 line graphs on it, depedning on how the graphs look) comparing the prediction of what May 2020 prescriptions would look like if covid didnt happen vs. what it actually was. I could also create a faceted geospatial map showing how the total number of antitibiotic prescriptions were different over Scotland in these 3 years.
+```{r, echo=FALSE}
+#To expand on this, I would create a gt() table to show the number of prescriptions and calculate a total for each year. I could use K nearest to predict what the May 2020 data should have been (if there was no covid outbreak), based on previous years' prescriptions. I would then create a faceted line plot (or 1 plot with 2 line graphs on it, depedning on how the graphs look) comparing the prediction of what May 2020 prescriptions would look like if covid didnt happen vs. what it actually was. I could also create a faceted geospatial map showing how the total number of antitibiotic prescriptions were different over Scotland in these 3 years.
+```
 
 ```{r}
 all_antibiotics_table <- antibiotics192024 %>%
@@ -114,7 +116,5 @@ all_antibiotics_table <- all_antibiotics_table %>%
     label = "Number of Prescriptions",
     columns = c("May 2019", "May 2020", "May 2024"))
 all_antibiotics_table
-
-#Note: I have kept in the NAs as it shows prescriptions that have moved in and out of the top 10 antibiotic prescriptions in the years I am looking at.
 ```
 
