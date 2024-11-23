@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 #How did covid-19 pandemic and lockdown affect the prescription trends of the most common antibiotics in Scotland.
 (Would it be better to focus on the main lockdown (May 2020) or also compare between lockdowns?)
 
-First I will load the appropriate libraries. Then, load, clean and filter the data.
+First I will load the appropriate libraries. Then, load and filter the data.
 ```{r, include=FALSE}
 library(tidyverse)
 library(janitor)
@@ -141,7 +141,7 @@ all_antibiotics_table
 
 I then created a faceted geospatial map to show which areas of Scotland were prescribed more antibiotics than other areas, and how this changed over covid
 
-```{r}
+```{r, message = FALSE, warnings = FALSE}
 #Load data
 NHS_healthboards <- st_read(here("data", "SG_NHS_HealthBoards_2019.shp"))
 
@@ -187,7 +187,7 @@ Healthboards_and_antibiotics <- NHS_healthboards %>%
   full_join(HBTpivoted_antibiotics, by = "HBT")  
 ```
 
-```{r, message = FALSE, warnings=FALSE}
+```{r, message = FALSE, warnings = FALSE}
 #Geom plot
 Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>% 
   ggplot(aes(fill = Prescription_Number)) +
@@ -210,6 +210,6 @@ Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>%
 
 geog_graph <- Healthboards_and_antibiotics_plot %>% 
   ggplotly()
-
+geog_graph
 ```
 
