@@ -1,32 +1,12 @@
 ---
-title: "Assessment"
+title: "Untitled"
 author: "Francesca"
-date: "2024-11-01"
+date: "2024-11-22"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-```
-
-## How did antibiotic prescription trends vary pre-, mid-, and post-lockdown in different regions of Scotland?
-#How did the prescription of the top 10 most prescribed antibiotics in 2019 change due to lockdown
-
-#How did covid-19 pandemic and lockdown affect the prescription trends of the most common antibiotics in Scotland.
-(Would it be better to focus on the main lockdown (May 2020) or also compare between lockdowns?)
-
-First I will load the appropriate libraries. Then, load, clean and filter the data.
-```{r, include=FALSE}
-library(tidyverse)
-library(janitor)
-library(gt)
-library(here)
-library(ggplot2)
-library(sf)
-library(ggspatial)
-library(grid)
-library(plotly)
-library(scales)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 First, I loaded the datasets and created a function to concisely use the same functions on different datasets. I learned how to do this from the website https://www.dataquest.io/blog/write-functions-in-r/. In this function I filtered for antibiotics by only looking at prescriptions with the BNFItemCode starting with 0501. Then I filtered out NAs, cleaned up the names and calculated the number of prescriptions. I then merged the datasets
 ```{r}
@@ -98,7 +78,7 @@ antibiotics_graph <- pivoted_antibiotics %>%
   ggplot(aes(x = Prescription_Number, y = Year, fill = Antibiotic)) +
   geom_bar(stat = "identity") +
   labs(title = "Prescriptions Sold for Each Antibiotic by Year") +
-  scale_fill_brewer(palette = "Paired") +
+  scale_fill_brewer(palette = "Paired")
   theme_minimal()
 
 antibiotics_graph <- antibiotics_graph %>% 
@@ -187,7 +167,7 @@ Healthboards_and_antibiotics <- NHS_healthboards %>%
   full_join(HBTpivoted_antibiotics, by = "HBT")  
 ```
 
-```{r, message = FALSE, warnings=FALSE}
+```{r}
 #Geom plot
 Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>% 
   ggplot(aes(fill = Prescription_Number)) +
@@ -207,9 +187,10 @@ Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>%
       line_col = "grey20"
     ) 
   )
+Healthboards_and_antibiotics_plot
 
 geog_graph <- Healthboards_and_antibiotics_plot %>% 
   ggplotly()
+geog_graph
 
 ```
-
