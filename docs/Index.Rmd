@@ -141,9 +141,9 @@ all_antibiotics_table
 
 I then created a faceted geospatial map to show which areas of Scotland were prescribed more antibiotics than other areas, and how this changed over covid
 
-```{r, message = FALSE, warnings = FALSE}
+```{r, message=FALSE, warning=FALSE}
 #Load data
-NHS_healthboards <- st_read(here("data", "SG_NHS_HealthBoards_2019.shp"))
+NHS_healthboards <- st_read(here("data", "SG_NHS_HealthBoards_2019.shp"), quiet = TRUE)
 
 #Prep for joining
 NHS_healthboards <- NHS_healthboards %>% 
@@ -207,9 +207,6 @@ Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>%
       line_col = "grey20"
     ) 
   )
-
-geog_graph <- Healthboards_and_antibiotics_plot %>% 
-  ggplotly()
-geog_graph
+Healthboards_and_antibiotics_plot
 ```
 
