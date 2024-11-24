@@ -32,9 +32,9 @@ library(scales)
 To answer this question, I first needed to load the appropriate libraries. Then, I loaded the datasets and created a function to concisely filter and edit the datasets for each year. I learned how to do this from the website https://www.dataquest.io/blog/write-functions-in-r/. In this function, I filtered for antibiotics by only looking at prescriptions with the BNFItemCode starting with 0501 (Open Prescribing, 2019). Then I filtered out NAs, cleaned up the names and calculated the number of prescriptions and arranged the data in descending order.
 ```{r}
 #Load the data for each year I will be looking at
-may2020 <- read_csv(here("data", "pitc202005.csv"))
-may2024 <- read_csv(here("data", "pitc202405.csv"))
-may2019 <- read_csv(here("data", "pitc201905.csv"))
+may2020 <- read_csv("https://www.opendata.nhs.scot/dataset/84393984-14e9-4b0d-a797-b288db64d088/resource/f2ffa7b3-3f93-470a-8125-880afb9aafe0/download/pitc202005.csv")
+may2024 <- read_csv("https://www.opendata.nhs.scot/dataset/84393984-14e9-4b0d-a797-b288db64d088/resource/5fbbd126-6166-4249-9620-7ed78e877297/download/pitc202405.csv")
+may2019 <- read_csv("https://www.opendata.nhs.scot/dataset/84393984-14e9-4b0d-a797-b288db64d088/resource/7479536b-0b95-43d6-9152-31bbd522e6b4/download/pitc201905.csv")
 
 #To make the relevant column titles consistent across datasets
 may2019 <- may2019 %>% 
