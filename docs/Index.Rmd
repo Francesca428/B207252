@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-##How did the COVID-19 pandemic and its resulting lockdown affect the prescription trends of the most common antibiotics in Scotland.
+## How did the COVID-19 pandemic and its resulting lockdown affect the prescription trends of the most common antibiotics in Scotland.
 
 I chose this question because I wanted to look into the effect of COVID-19 on the prescription of drugs across Scotland. I chose to analyse the antibiotic trends because I hypothesised that COVID-19 would cause a decrease in the prescription of antibiotics due to the focus on COVID-19 treatment and the lifestyle during the main 2020 lockdown. This lifestyle included mask-wearing, social distancing and the use of hand sanitiser. These changes would have caused a reduction in the spread of both COVID-19 and bacteria, therefore reducing the prescription of antibiotics. I also hypothesised that by 2024, the number of prescriptions will have returned to a similar level in 2019. This is because doctors may want to keep antibiotic prescriptions low to prevent antibiotic resistance, but this effect is cancelled out by the growing Scottish population.
 
@@ -228,6 +228,13 @@ It is important to note that ChatGPT was used in this assessment when dealing wi
 To further assess the data, the analysis of antibiotic prescriptions from 2020 to 2024 could be analysed to see if there was a steady or harsh increase in antibiotic prescriptions after the pandemic. Furthermore, the data could be analysed while taking population into account, to make it clear in geospatial maps if there are some areas that are disproportionately being prescribed more or fewer antibiotics during the pandemic. This data could be used to assess if antibiotics are currently being overprescribed, and could therefore prevent further antibiotic resistance. In the long term, this data could be continuously compared to incoming data for 2025, 2026, etc. to see if there are any further long-term effects of the COVID-19 pandemic on the prescription of antibiotics.
 
 To conclude, my hypothesis that COVID-19 caused a decrease in antibiotic prescriptions is true, however I was incorrect in hypothesising that in 2024 there would be a somewhat equal level or antibiotic prescriptions. For short-term research, the data could be analysed to look at region-specific data in the context of the population. For long-term research, the current data could be compared to future data to see the long-term effects of COVID-19 on prescriptions of antibiotics.
+
+
+
+
+
+
+
 
 References:
 Andrews, A., Bou-Antoun, S., Guy, R., Brown, C.S., Hopkins, S. and Gerver, S. (2021). Respiratory antibacterial prescribing in primary care and the COVID-19 pandemic in England, winter season 2020–21. Journal of Antimicrobial Chemotherapy. doi:https://doi.org/10.1093/jac/dkab443.
