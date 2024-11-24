@@ -217,6 +217,7 @@ Healthboards_and_antibiotics_plot <- Healthboards_and_antibiotics %>%
   )
 Healthboards_and_antibiotics_plot
 ```
+
 This geospatial map was used to compare the prescription trends across different areas of Scotland before, during and after the COVID-19 pandemic and resulting lockdowns. This map illustrates that there was an overall decrease in the prescription of antibiotics across Scotland. Notably, Greater Glasgow and Clyde and Lothian have had a large increase in antibiotic prescriptions in 2024. This could be because the big cities of Edinburgh and Glasgow are found in these areas, so even if there is a much larger increase in prescriptions in these areas, it is likely they have proportionally a similar increase in prescriptions compared to other less populated regions like the Highlands.
 
 
@@ -229,14 +230,7 @@ To further assess the data, the analysis of antibiotic prescriptions from 2020 t
 
 To conclude, my hypothesis that COVID-19 caused a decrease in antibiotic prescriptions is true, however I was incorrect in hypothesising that in 2024 there would be a somewhat equal level or antibiotic prescriptions. For short-term research, the data could be analysed to look at region-specific data in the context of the population. For long-term research, the current data could be compared to future data to see the long-term effects of COVID-19 on prescriptions of antibiotics.
 
-
-
-
-
-
-
-
-References:
+## References:
 Andrews, A., Bou-Antoun, S., Guy, R., Brown, C.S., Hopkins, S. and Gerver, S. (2021). Respiratory antibacterial prescribing in primary care and the COVID-19 pandemic in England, winter season 2020–21. Journal of Antimicrobial Chemotherapy. doi:https://doi.org/10.1093/jac/dkab443.
 
 NHS (2019). Trimethoprim. [online] NHS. Available at: https://www.nhs.uk/medicines/trimethoprim/.
